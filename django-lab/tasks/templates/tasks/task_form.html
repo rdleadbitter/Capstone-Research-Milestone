@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+  <title>Task Form</title>
+</head>
+<body>
+  <h1>Task</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+
+  <p><a href="{% url 'task-list' %}">Back</a></p>
+</body>
+</html>

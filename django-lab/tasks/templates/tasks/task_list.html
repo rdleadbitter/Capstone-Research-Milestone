@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <title>Task Tracker</title>
+</head>
+<body>
+  <h1>My Tasks</h1>
+  <p><a href="{% url 'task-create' %}">Add a task</a></p>
+
+  {% for task in tasks %}
+    <article>
+      <h2>
+        {% if task.completed %}✓{% else %}○{% endif %}
+        {{ task.title }}
+      </h2>
+
+      <p>{{ task.description }}</p>
+
+      <a href="{% url 'task-toggle' task.pk %}">Toggle complete</a>
+      <a href="{% url 'task-edit' task.pk %}">Edit</a>
+      <a href="{% url 'task-delete' task.pk %}">Delete</a>
+    </article>
+    <hr>
+  {% empty %}
+    <p>No tasks yet. Add one.</p>
+  {% endfor %}
+</body>
+</html>
