@@ -1,28 +1,60 @@
-<!doctype html>
-<html>
-<head>
-  <title>Task Tracker</title>
-</head>
-<body>
-  <h1>My Tasks</h1>
-  <p><a href="{% url 'task-create' %}">Add a task</a></p>
+{% extends "base.html" %}
 
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Construction-defect intelligence</p>
+  <h1>Lead pipeline</h1>
+  <p>Review opportunities, prioritize stronger cases, and track follow-up.</p>
+</section>
+
+<section class="stats">
+  <div><strong>{{ lead_count }}</strong><span>Total leads</span></div>
+  <div><strong>{{ high_priority_count }}</strong><span>High priority</span></div>
+  <div><strong>{{ tasks|length }}</strong><span>Showing now</span></div>
+</section>
+
+<form class="filters" method="get">
+  <input name="q" value="{{ query }}" placeholder="Search lead, county, defect, case #">
+  <select name="status">
+    <option value="">All statuses</option>
+    {% for value, label in statuses %}
+      <option value="{{ value }}" {% if active_status == value %}selected{% endif %}>
+        {{ label }}
+      </option>
+    {% endfor %}
+  </select>
+  <button type="submit">Filter</button>
+</form>
+
+<section class="lead-grid">
   {% for task in tasks %}
-    <article>
-      <h2>
-        {% if task.completed %}✓{% else %}○{% endif %}
-        {{ task.title }}
-      </h2>
+    <article class="lead-card">
+      <div class="lead-card-top">
+        <span class="status status-{{ task.status }}">{{ task.get_status_display }}</span>
+        <span class="score {% if task.score >= 80 %}high-score{% endif %}">
+          {{ task.score }}/100
+        </span>
+      </div>
 
-      <p>{{ task.description }}</p>
+      <h2>{{ task.title }}</h2>
+      <p class="meta">
+        {{ task.county|default:"County unknown" }} ·
+        {{ task.defect_type|default:"Category pending" }}
+      </p>
 
-      <a href="{% url 'task-toggle' task.pk %}">Toggle complete</a>
-      <a href="{% url 'task-edit' task.pk %}">Edit</a>
-      <a href="{% url 'task-delete' task.pk %}">Delete</a>
+      {% if task.case_number %}
+        <p class="case">Case #{{ task.case_number }}</p>
+      {% endif %}
+
+      <p>{{ task.description|default:"No notes yet."|truncatechars:125 }}</p>
+
+      <footer>
+        <a href="{% url 'task-edit' task.pk %}">Open lead →</a>
+        <a class="delete-link" href="{% url 'task-delete' task.pk %}">Delete</a>
+      </footer>
     </article>
-    <hr>
   {% empty %}
-    <p>No tasks yet. Add one.</p>
+    <p class="empty-state">No matching leads. Add one or clear the filters.</p>
   {% endfor %}
-</body>
-</html>
+</section>
+{% endblock %}

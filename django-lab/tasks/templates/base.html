@@ -1,0 +1,19 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>KRC Lead Desk</title>
+  <link rel="stylesheet" href="{% static 'tasks/styles.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{% url 'task-list' %}">KRC <span>Lead Desk</span></a>
+    <a class="button" href="{% url 'task-create' %}">+ Add lead</a>
+  </header>
+
+  <main class="page-shell">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
